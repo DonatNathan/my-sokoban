@@ -78,21 +78,28 @@ int launch_game(char *map)
     int my_char;
     int size_line;
     positions *pos_map = malloc(sizeof(positions));
+    char *copy_map = malloc(sizeof(char *) * 100);
 
+    for (int cmpt = 0; map[cmpt] != '\0'; cmpt += 1)
+        copy_map[cmpt] = map[cmpt];
     pos_map->map = map;
     pos_map->pos_end = -1;
     for (size_line = 0; map[size_line] != '\n'; size_line += 1);
+    win = initscr();
     while (stop == 1) {
-        win = initscr();
         keypad(stdscr, TRUE);
         addstr(map);
         my_char = getch();
-        move_p(my_char, pos_map, size_line + 1);
         refresh();
-        endwin();
+        if (my_char == ' ') {
+            for	(int cmpt = 0; map[cmpt] != '\0'; cmpt += 1)
+                map[cmpt] = copy_map[cmpt];
+        } else
+            move_p(my_char, pos_map, size_line + 1);
         if (check_end(map) == 0 && pos_map->pos_end == -1)
             stop = 0;
         clear(); //REMOVE THAT
     }
+    endwin();
     return (0);
 }
