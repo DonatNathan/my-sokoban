@@ -7,6 +7,23 @@
 
 #include "includes/sokoban.h"
 
+void test_size(char *map)
+{
+    struct winsize size;
+    int x;
+    int y = 0;
+
+    for (int cmpt = 0; map[cmpt] != '\0'; cmpt += 1)
+        if (map[cmpt] == '\n')
+            y += 1;
+    for (x = 0; map[x] != '\n'; x += 1);
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+    if (y > size.ws_row || x + 1 > size.ws_col)
+        mvaddstr((size.ws_row - 1) / 2, size.ws_col / 2, "RESIZE THE WINDOW");
+    else
+        addstr(map);
+}
+
 int count_walls(positions *pos_map, int cmpt, int size_line)
 {
     if ((pos_map->map[cmpt - 1] == 'X' || pos_map->map[cmpt - 1] == '#') && (pos_map->map[cmpt - size_line] == 'X' || pos_map->map[cmpt - size_line] == '#'))

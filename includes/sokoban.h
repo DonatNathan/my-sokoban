@@ -17,6 +17,7 @@
     #include <unistd.h>
     #include <stdio.h>
     #include <locale.h>
+    #include <sys/ioctl.h>
 
 struct char_map {
     int cmpt_x;
@@ -42,5 +43,6 @@ typedef struct positions positions;
 char *get_map(char **argv, struct stat *my_file);
 int launch_game(char *map);
 int check_defeat(positions *pos_map, int size_line);
+void test_size(char *map);
 
 #endif /* SOKOBAN_H_ */

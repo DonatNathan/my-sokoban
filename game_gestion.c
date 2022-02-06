@@ -105,7 +105,7 @@ int launch_game(char *map)
     win = initscr();
     while (stop == 2) {
         keypad(stdscr, TRUE);
-        addstr(map);
+        test_size(map);
         my_char = getch();
         refresh();
         if (my_char == ' ') {
