@@ -32,10 +32,15 @@ struct positions {
     int obstacle;
     char *map;
     int pos_end;
+    int pos_caisse;
+    int what_is;
+    int change;
+    int in_o;
 };
 typedef struct positions positions;
 
 char *get_map(char **argv, struct stat *my_file);
 int launch_game(char *map);
+int check_defeat(positions *pos_map, int size_line);
 
 #endif /* SOKOBAN_H_ */

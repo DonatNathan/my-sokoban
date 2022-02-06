@@ -7,37 +7,54 @@
 
 #include "includes/sokoban.h"
 
+void o_gestion(positions *pos_map)
+{
+    if (pos_map->in_o == 0) {
+        pos_map->pos_end = pos_map->cible;
+        pos_map->what_is = 1;
+    }
+    else if (pos_map->in_o == 1) {
+        pos_map->pos_caisse = pos_map->obstacle;
+        pos_map->what_is = 2;
+    }
+    else if (pos_map->change == 0) {
+        pos_map->pos_end = -1;
+        pos_map->pos_caisse = -1;
+    }
+}
+
+void replace_o(positions *pos_map)
+{
+    if (pos_map->pos_end != -1 && pos_map->change == 0 && pos_map->what_is == 1) //HERE      
+        pos_map->map[pos_map->player] = 'O';
+    else if (pos_map->pos_caisse != -1 && pos_map->change == 0 && pos_map->what_is == 2 && pos_map->cible == 'X')
+	pos_map->map[pos_map->pos_caisse] = 'O';
+}
+
 void check_inversion(positions *pos_map)
 {
-    int in_o = 2;
-    int change = 0;
-
+    pos_map->in_o = 2;
+    pos_map->change = 0;
     if (pos_map->map[pos_map->cible] == ' ') {
         pos_map->map[pos_map->cible] = pos_map->map[pos_map->player];
         pos_map->map[pos_map->player] = ' ';
     }
     if (pos_map->map[pos_map->cible] == 'X' && pos_map->map[pos_map->obstacle] != '#' && pos_map->map[pos_map->obstacle] != 'X') {
-//        if (pos_map->map[pos_map->obstacle] == 'O')
-//            in_o = 1;
+        if (pos_map->map[pos_map->obstacle] == 'O')
+            pos_map->in_o = 1;
         pos_map->map[pos_map->cible] = pos_map->map[pos_map->player];
         pos_map->map[pos_map->player] = ' ';
         pos_map->map[pos_map->obstacle] = 'X';
     }
     if (pos_map->map[pos_map->cible] == 'O') {
-        in_o = 0;
+        pos_map->in_o = 0;
         pos_map->map[pos_map->cible] = pos_map->map[pos_map->player];
         pos_map->map[pos_map->player] = ' ';
     }
     if (pos_map->map[pos_map->cible] == '#')
-        change = 1;
-    if (pos_map->pos_end != -1 && change == 0)
-        pos_map->map[pos_map->player] = 'O';
-    if (in_o == 0)
-        pos_map->pos_end = pos_map->cible;
-//    else if (in_o == 1)
-//        pos_map->pos_end = pos_map->obstacle;
-    else if (change == 0)
-        pos_map->pos_end = -1;
+        pos_map->change = 1;
+    replace_o(pos_map);
+    o_gestion(pos_map);
 }
 
 void move_p(int my_char, positions *pos_map, int size_line)
@@ -74,7 +91,7 @@ int check_end(char *map)
 int launch_game(char *map)
 {
     WINDOW *win;
-    int stop = 1;
+    int stop = 2;
     int my_char;
     int size_line;
     positions *pos_map = malloc(sizeof(positions));
@@ -86,7 +103,7 @@ int launch_game(char *map)
     pos_map->pos_end = -1;
     for (size_line = 0; map[size_line] != '\n'; size_line += 1);
     win = initscr();
-    while (stop == 1) {
+    while (stop == 2) {
         keypad(stdscr, TRUE);
         addstr(map);
         my_char = getch();
@@ -98,8 +115,10 @@ int launch_game(char *map)
             move_p(my_char, pos_map, size_line + 1);
         if (check_end(map) == 0 && pos_map->pos_end == -1)
             stop = 0;
+        else if (check_defeat(pos_map, size_line) == 0)
+            stop = 1;
         clear(); //REMOVE THAT
     }
     endwin();
-    return (0);
+    return (stop);
 }
