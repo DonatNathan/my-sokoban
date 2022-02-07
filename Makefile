@@ -51,7 +51,7 @@ $(NAME): $(OBJ)
 	@ar rc libmy.a $(OBJ)
 	@echo ">>> Executable \"${NAME}\" created."
 	@gcc -g3 -o ${NAME} main.c map_gestion.c \
-game_gestion.c -lncurses -L. libmy.a
+game_gestion.c o_gestion.c -lncurses -L. libmy.a
 
 clean:
 	@rm -f $(OBJ)

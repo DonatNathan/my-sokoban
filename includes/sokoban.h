@@ -37,6 +37,8 @@ struct positions {
     int what_is;
     int change;
     int in_o;
+    int size_line;
+    char *copy_map;
 };
 typedef struct positions positions;
 
@@ -44,5 +46,9 @@ char *get_map(char **argv, struct stat *my_file);
 int launch_game(char *map);
 int check_defeat(positions *pos_map, int size_line);
 void test_size(char *map);
+void o_gestion(positions *pos_map);
+void replace_o(positions *pos_map);
+int check_end(char *map);
+void check_inversion2(positions *pos_map);
 
 #endif /* SOKOBAN_H_ */

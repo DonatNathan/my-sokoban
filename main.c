@@ -26,25 +26,31 @@ void test_size(char *map)
 
 int count_walls(positions *pos_map, int cmpt, int size_line)
 {
-    if ((pos_map->map[cmpt - 1] == 'X' || pos_map->map[cmpt - 1] == '#') && (pos_map->map[cmpt - size_line] == 'X' || pos_map->map[cmpt - size_line] == '#'))
+    if ((pos_map->map[cmpt - 1] == 'X' || pos_map->map[cmpt - 1] == '#') && \
+(pos_map->map[cmpt - size_line] == 'X' || pos_map->map[cmpt - size_line] \
+ == '#'))
         return (0);
-    if ((pos_map->map[cmpt + 1] == 'X' || pos_map->map[cmpt + 1] == '#') && (pos_map->map[cmpt + size_line] == 'X' || pos_map->map[cmpt + size_line] == '#'))
+    if ((pos_map->map[cmpt + 1] == 'X' || pos_map->map[cmpt + 1] == '#') && \
+(pos_map->map[cmpt + size_line] == 'X' || pos_map->map[cmpt + size_line] \
+ == '#'))
         return (0);
-    if ((pos_map->map[cmpt + 1] == 'X' || pos_map->map[cmpt + 1] == '#') && (pos_map->map[cmpt - size_line - 1] == 'X' || pos_map->map[cmpt - size_line - 1] == '#'))
+    if ((pos_map->map[cmpt + 1] == 'X' || pos_map->map[cmpt + 1] == '#') && \
+(pos_map->map[cmpt - size_line - 1] == 'X' || pos_map->map[cmpt - \
+size_line - 1] == '#'))
         return (0);
-    if ((pos_map->map[cmpt - 1] == 'X' || pos_map->map[cmpt - 1] == '#') && (pos_map->map[cmpt + size_line + 1] == 'X' || pos_map->map[cmpt + size_line + 1] == '#'))
+    if ((pos_map->map[cmpt - 1] == 'X' || pos_map->map[cmpt - 1] == '#') && \
+(pos_map->map[cmpt + size_line + 1] == 'X' || pos_map->map[cmpt + \
+size_line + 1] == '#'))
         return (0);
     return (1);
 }
 
 int check_defeat(positions *pos_map, int size_line)
 {
-    for (int cmpt = 0; pos_map->map[cmpt] != '\0'; cmpt += 1) {
-        if (pos_map->map[cmpt] == 'X') {
-            if (count_walls(pos_map, cmpt, size_line) == 1)
-                return (1);
-        }
-    }
+    for (int cmpt = 0; pos_map->map[cmpt] != '\0'; cmpt += 1)
+        if (pos_map->map[cmpt] == 'X' && \
+            count_walls(pos_map, cmpt, size_line) == 1)
+            return (1);
     return (0);
 }
 

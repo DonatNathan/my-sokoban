@@ -7,52 +7,21 @@
 
 #include "includes/sokoban.h"
 
-void o_gestion(positions *pos_map)
-{
-    if (pos_map->in_o == 0) {
-        pos_map->pos_end = pos_map->cible;
-        pos_map->what_is = 1;
-    }
-    else if (pos_map->in_o == 1) {
-        pos_map->pos_caisse = pos_map->obstacle;
-        pos_map->what_is = 2;
-    }
-    else if (pos_map->change == 0) {
-        pos_map->pos_end = -1;
-        pos_map->pos_caisse = -1;
-    }
-}
-
-void replace_o(positions *pos_map)
-{
-    if (pos_map->pos_end != -1 && pos_map->change == 0 && pos_map->what_is == 1) //HERE      
-        pos_map->map[pos_map->player] = 'O';
-    else if (pos_map->pos_caisse != -1 && pos_map->change == 0 && pos_map->what_is == 2 && pos_map->cible == 'X')
-	pos_map->map[pos_map->pos_caisse] = 'O';
-}
-
 void check_inversion(positions *pos_map)
 {
     pos_map->in_o = 2;
     pos_map->change = 0;
-    if (pos_map->map[pos_map->cible] == ' ') {
-        pos_map->map[pos_map->cible] = pos_map->map[pos_map->player];
-        pos_map->map[pos_map->player] = ' ';
-    }
-    if (pos_map->map[pos_map->cible] == 'X' && pos_map->map[pos_map->obstacle] != '#' && pos_map->map[pos_map->obstacle] != 'X') {
-        if (pos_map->map[pos_map->obstacle] == 'O')
+    check_inversion2(pos_map);
+    if (pos_map->map[pos_map->cible] == 'X' && pos_map->map\
+[pos_map->obstacle] != '#' && pos_map->map[pos_map->obstacle] != 'X') {
+        if (pos_map->map[pos_map->obstacle] == 'O') {
             pos_map->in_o = 1;
+            pos_map->change = 1;
+        }
         pos_map->map[pos_map->cible] = pos_map->map[pos_map->player];
         pos_map->map[pos_map->player] = ' ';
         pos_map->map[pos_map->obstacle] = 'X';
     }
-    if (pos_map->map[pos_map->cible] == 'O') {
-        pos_map->in_o = 0;
-        pos_map->map[pos_map->cible] = pos_map->map[pos_map->player];
-        pos_map->map[pos_map->player] = ' ';
-    }
-    if (pos_map->map[pos_map->cible] == '#')
-        pos_map->change = 1;
     replace_o(pos_map);
     o_gestion(pos_map);
 }
@@ -80,44 +49,47 @@ void move_p(int my_char, positions *pos_map, int size_line)
     }
 }
 
-int check_end(char *map)
+void init_struct(positions *pos_map, char *map)
 {
-    for (int cmpt = 0; map[cmpt]; cmpt += 1)
-        if (map[cmpt] == 'O')
-            return (1);
-    return (0);
+    pos_map->copy_map = malloc(sizeof(char *) * 100);
+    for (int cmpt = 0; map[cmpt] != '\0'; cmpt += 1)
+        pos_map->copy_map[cmpt] = map[cmpt];
+    pos_map->map = map;
+    pos_map->pos_end = -1;
+    pos_map->pos_caisse = -1;
+    for (pos_map->size_line = 0; map[pos_map->size_line] != '\n'; \
+         pos_map->size_line += 1);
+}
+
+int draw_all(positions *pos_map, int my_char, int stop)
+{
+    if (my_char == ' ') {
+        for (int cmpt = 0; pos_map->map[cmpt] != '\0'; cmpt += 1)
+            pos_map->map[cmpt] = pos_map->copy_map[cmpt];
+    } else
+        move_p(my_char, pos_map, pos_map->size_line + 1);
+    if (check_end(pos_map->map) == 0 && pos_map->pos_end == -1)
+        stop = 0;
+    else if (check_defeat(pos_map, pos_map->size_line) == 0)
+        stop = 1;
+    return (stop);
 }
 
 int launch_game(char *map)
 {
-    WINDOW *win;
+    WINDOW *win = initscr();
     int stop = 2;
     int my_char;
-    int size_line;
     positions *pos_map = malloc(sizeof(positions));
-    char *copy_map = malloc(sizeof(char *) * 100);
 
-    for (int cmpt = 0; map[cmpt] != '\0'; cmpt += 1)
-        copy_map[cmpt] = map[cmpt];
-    pos_map->map = map;
-    pos_map->pos_end = -1;
-    for (size_line = 0; map[size_line] != '\n'; size_line += 1);
-    win = initscr();
+    init_struct(pos_map, map);
     while (stop == 2) {
         keypad(stdscr, TRUE);
         test_size(map);
-        my_char = getch();
         refresh();
-        if (my_char == ' ') {
-            for	(int cmpt = 0; map[cmpt] != '\0'; cmpt += 1)
-                map[cmpt] = copy_map[cmpt];
-        } else
-            move_p(my_char, pos_map, size_line + 1);
-        if (check_end(map) == 0 && pos_map->pos_end == -1)
-            stop = 0;
-        else if (check_defeat(pos_map, size_line) == 0)
-            stop = 1;
-        clear(); //REMOVE THAT
+        my_char = getch();
+        stop = draw_all(pos_map, my_char, stop);
+        clear();
     }
     endwin();
     return (stop);
