@@ -19,36 +19,35 @@
     #include <locale.h>
     #include <sys/ioctl.h>
 
-struct char_map {
+typedef struct char_map {
     int cmpt_x;
     int cmpt_o;
     int cmpt_p;
     int cmpt_return;
-};
-typedef struct char_map char_map;
+} char_map;
 
-struct positions {
-    int cible;
-    int player;
-    int obstacle;
-    char *map;
-    int pos_end;
-    int pos_caisse;
+typedef struct positions {
+    int *cible;
+    int *player;
+    int *obstacle;
+    char **map;
+    int *pos_end;
+    int *pos_caisse;
     int what_is;
     int change;
     int in_o;
-    int size_line;
-    char *copy_map;
-};
-typedef struct positions positions;
+    char **copy_map;
+    char **pos_o;
+    char *line;
+    char *chara;
+} positions;
 
 char *get_map(char **argv, struct stat *my_file);
-int launch_game(char *map);
-int check_defeat(positions *pos_map, int size_line);
-void test_size(char *map);
-void o_gestion(positions *pos_map);
+int launch_game(char **map, int stop);
+int draw_all(positions *pos_map, int my_char, int stop);
 void replace_o(positions *pos_map);
-int check_end(char *map);
-void check_inversion2(positions *pos_map);
+void o_gestion(positions *pos_map);
+int check_defeat(positions *pos_map);
+int check_end(char **map);
 
 #endif /* SOKOBAN_H_ */

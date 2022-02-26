@@ -12,8 +12,9 @@ char *my_strcat(char *dest, char const *src)
     int size = my_strlen(dest);
     int cmpt;
 
-    for (cmpt = 0; src[cmpt] != '\0'; cmpt += 1)
+    for (cmpt = 0; src[cmpt] != '\0'; cmpt += 1) {
         dest[size + cmpt] = src[cmpt];
+    }
     dest[size + cmpt] = '\0';
     return (dest);
 }

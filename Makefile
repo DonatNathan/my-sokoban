@@ -5,7 +5,7 @@
 ## It's the Makefile of my_hunter project
 ##
 
-SRC	 =      lib/my/my_revstr.c      \
+LIB	 =      lib/my/my_revstr.c      \
                 lib/my/my_str_isprintable.c     \
                 lib/my/my_compute_power_rec.c   \
                 lib/my/my_showmem.c     \
@@ -40,7 +40,9 @@ SRC	 =      lib/my/my_revstr.c      \
 		lib/my/my_printf2.c	\
 		lib/my/new_put_nbr.c	\
 
-OBJ = $(SRC:.c=.o)
+SRC = src/*.c
+
+OBJ = $(LIB:.c=.o)
 
 NAME = my_sokoban
 
@@ -50,8 +52,7 @@ $(NAME): $(OBJ)
 	@echo ">>> Librairy compiled."
 	@ar rc libmy.a $(OBJ)
 	@echo ">>> Executable \"${NAME}\" created."
-	@gcc -g3 -o ${NAME} main.c map_gestion.c \
-game_gestion.c o_gestion.c -lncurses -L. libmy.a
+	@gcc -g3 -o ${NAME} $(SRC) -lncurses -L. libmy.a
 
 clean:
 	@rm -f $(OBJ)
