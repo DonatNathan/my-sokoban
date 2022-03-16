@@ -5,7 +5,7 @@
 ** It's the file that contain functions to verify my map
 */
 
-#include "includes/sokoban.h"
+#include "../includes/sokoban.h"
 
 int check_if_auto(char my_char)
 {
@@ -56,7 +56,7 @@ int check_map(char *map)
     }
     if (num_chars->cmpt_x != num_chars->cmpt_o || num_chars->cmpt_p != 1 || \
         num_chars->cmpt_return != count_line(map)) {
-	write(2, "invalid number of char\n", 23);
+        write(2, "invalid number of char\n", 23);
         return (84);
     }
 }
@@ -71,7 +71,7 @@ char *get_map(char **argv, struct stat *my_file)
         write(2, "failed to read\n", 15);
         return ("84");
     }
-    for (int cmpt = 0; buffer[cmpt] != '\0'; cmpt += 1)
+    for (int cmpt = 0; cmpt != my_file->st_size; cmpt += 1)
         map[cmpt] = buffer[cmpt];
     if (check_map(map) == 84)
         return ("84");

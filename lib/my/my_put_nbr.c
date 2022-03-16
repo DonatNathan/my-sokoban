@@ -39,6 +39,6 @@ void my_put_nbr(int nb)
         count = count - 1;
         result = nb / puissance(count);
         result = result % 10 + 48;
-        my_putchar((char) result);
+        my_putchar((char)result);
     }
 }

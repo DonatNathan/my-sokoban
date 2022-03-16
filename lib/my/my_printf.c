@@ -30,7 +30,7 @@ void if_percentage(va_list list, char *s, int cmpt_char)
     if (s[cmpt_char] == 'i' || s[cmpt_char] == 'd')
         my_put_nbr(va_arg(list, int));
     if (s[cmpt_char] == 'c')
-        my_putchar((char) va_arg(list, int));
+        my_putchar((char)va_arg(list, int));
     if (s[cmpt_char] == 'b')
         binary(va_arg(list, unsigned int));
     if (s[cmpt_char] != 's' && s[cmpt_char] != 'i' && s[cmpt_char] != 'd' \

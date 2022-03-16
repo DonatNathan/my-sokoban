@@ -40,6 +40,9 @@ typedef struct positions {
     char **pos_o;
     char *line;
     char *chara;
+    int placed;
+    char *temp_placed;
+    char *total;
 } positions;
 
 char *get_map(char **argv, struct stat *my_file);
@@ -48,16 +51,10 @@ int draw_all(positions *pos_map, int my_char);
 void replace_o(positions *pos_map);
 void o_gestion(positions *pos_map);
 int check_defeat(positions *pos_map);
-int check_end(char **map);
+int check_end(char **map, positions *pos_map);
+void add_menu(positions *pos_map);
+int check_pos_p(positions *pos_map);
 void reset_line_chara(positions *pos_map);
 void get_line_chara(positions *pos_map, char *pos_o);
-int check_pos_p(positions *pos_map);
-int get_height(char *map);
-int get_o(positions *pos_map, int cmpt_o, int line);
-void stock_o(positions *pos_map);
-void test_stop(positions *pos_map, int stop);
-int get_o_little(positions *pos_map, int cmpt, int nb_o);
-void restart_map(positions *pos_map);
-void is_p(positions *pos_map, int line);
 
 #endif /* SOKOBAN_H_ */

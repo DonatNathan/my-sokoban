@@ -7,7 +7,7 @@
 
 #include "../includes/sokoban.h"
 
-void test_size(char **map)
+void test_size(char **map, positions *pos_map)
 {
     struct winsize size;
     int x;
@@ -21,9 +21,10 @@ void test_size(char **map)
             final_x = x;
     }
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-    if (y > size.ws_row || final_x > size.ws_col)
+    if (y > size.ws_row - 2 || final_x > size.ws_col || size.ws_col < 17)
         mvaddstr((size.ws_row - 1) / 2, size.ws_col / 2 - 6, "RESIZE WINDOW");
     else {
+        add_menu(pos_map);
         for (int cmpt = 0; map[cmpt]; cmpt += 1)
             addstr(map[cmpt]);
     }
@@ -35,29 +36,31 @@ int get_o(positions *pos_map, int cmpt_o, int line)
 
     for (int cmpt = 0; pos_map->map[line][cmpt] != '\0'; cmpt += 1) {
         if (pos_map->map[line][cmpt] == 'O') {
-            pos_map->pos_o[cmpt_o] = malloc(sizeof(char) * 10);
-            temp = malloc(sizeof(char) * 10);
-            pos_map->pos_o[cmpt_o] = new_put_nbr_str(line, \
+            pos_map->pos_o[cmpt_o] = malloc(sizeof(char *));
+            temp = malloc(sizeof(char *));
+            pos_map->pos_o[cmpt_o] = new_put_nbr_str(line,      \
                                                     pos_map->pos_o[cmpt_o]);
             pos_map->pos_o[cmpt_o] = my_strcat(pos_map->pos_o[cmpt_o], ":");
-            pos_map->pos_o[cmpt_o] = my_strcat(pos_map->pos_o[cmpt_o], \
+            pos_map->pos_o[cmpt_o] = my_strcat(pos_map->pos_o[cmpt_o],  \
                                                 new_put_nbr_str(cmpt, temp));
-            pos_map->pos_o[cmpt_o] = my_strcat(pos_map->pos_o[cmpt_o], \
+            pos_map->pos_o[cmpt_o] = my_strcat(pos_map->pos_o[cmpt_o],  \
                                                 "\0");
             cmpt_o += 1;
-
         }
     }
     return (cmpt_o);
 }
 
-void allocs(positions *pos_map)
+void stock_o(positions *pos_map)
 {
-    pos_map->player = malloc(sizeof(int) * 2);
-    pos_map->cible = malloc(sizeof(int) * 2);
-    pos_map->obstacle = malloc(sizeof(int) * 2);
-    pos_map->line = malloc(sizeof(char *));
-    pos_map->chara = malloc(sizeof(char *));
+    int cmpt_o = 0;
+    char *temp = malloc(sizeof(char *));
+
+    pos_map->pos_o = malloc(sizeof(char **));
+    for (int line = 0; pos_map->map[line]; line += 1) {
+        cmpt_o = get_o(pos_map, cmpt_o, line);
+    }
+    pos_map->total = new_put_nbr_str(cmpt_o, temp);
 }
 
 void init_struct(positions *pos_map, char **map)
@@ -66,10 +69,15 @@ void init_struct(positions *pos_map, char **map)
 
     pos_map->pos_end = malloc(sizeof(int) * 2);
     pos_map->pos_caisse = malloc(sizeof(int) * 2);
-    for (cmpt = 0; map[cmpt]; cmpt += 1);
-    pos_map->copy_map = malloc(sizeof(char *) * cmpt);
+    pos_map->copy_map = malloc(sizeof(char **));
     pos_map->copy_map[0] = malloc(sizeof(char *) * 10);
-    allocs(pos_map);
+    pos_map->player = malloc(sizeof(int) * 2);
+    pos_map->cible = malloc(sizeof(int) * 2);
+    pos_map->obstacle = malloc(sizeof(int) * 2);
+    pos_map->line = malloc(sizeof(char *));
+    pos_map->chara = malloc(sizeof(char *));
+    pos_map->total = malloc(sizeof(char *));
+    pos_map->temp_placed = malloc(sizeof(char *));
     for (cmpt = 0; map[cmpt]; cmpt += 1) {
         pos_map->copy_map[cmpt] = malloc(sizeof(char *) * 10);
         for (int chara = 0; map[cmpt][chara] != '\0'; chara += 1)
@@ -90,13 +98,17 @@ int launch_game(char **map, int stop)
     init_struct(pos_map, map);
     stock_o(pos_map);
     while (stop == 2) {
-        keypad(stdscr, TRUE);
-        test_size(map);
-        my_char = getch();
-        stop = draw_all(pos_map, my_char);
-        clear();
-        test_stop(pos_map, stop);
+    keypad(stdscr, TRUE);
+        test_size(map, pos_map);
         refresh();
+        my_char = getch();
+    stop = draw_all(pos_map, my_char);
+        clear();
     }
+    endwin();
+    if (stop == 0)
+        my_printf("You WIN !\n");
+    else if (stop == 1)
+        my_printf("You LOOSE !\n");
     return (stop);
 }

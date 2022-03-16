@@ -36,7 +36,7 @@ void count_char(char_map *num_chars, char my_char)
     if (my_char == 'O')
         num_chars->cmpt_o += 1;
     if (my_char == '\n')
-	num_chars->cmpt_return += 1;
+        num_chars->cmpt_return += 1;
 }
 
 int check_map(char *map)
@@ -65,14 +65,16 @@ char *get_map(char **argv, struct stat *my_file)
 {
     int file_desc = open(argv[1], O_RDONLY);
     char buffer[my_file->st_size];
-    char *map = malloc(sizeof(char) * my_file->st_size);
+    char *map = malloc(sizeof(char) * my_file->st_size + 1);
+    int cmpt;
 
     if (read(file_desc, buffer, my_file->st_size) == -1 || file_desc == -1) {
-	write(2, "failed to read\n", 15);
+        write(2, "failed to read\n", 15);
         return ("84");
     }
-    for (int cmpt = 0; cmpt != my_file->st_size; cmpt += 1)
-	map[cmpt] = buffer[cmpt];
+    for (cmpt = 0; cmpt != my_file->st_size; cmpt += 1)
+        map[cmpt] = buffer[cmpt];
+    map[cmpt] = '\0';
     if (check_map(map) == 84)
         return ("84");
     return (map);

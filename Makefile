@@ -42,6 +42,8 @@ LIB	 =      lib/my/my_revstr.c      \
 
 SRC = src/*.c
 
+BONUS = bonus/src/*.c
+
 OBJ = $(LIB:.c=.o)
 
 NAME = my_sokoban
@@ -63,3 +65,9 @@ fclean: clean
 	@rm -f libmy.a
 
 re: fclean all
+
+bonus: $(OBJ)
+	@echo ">>> Librairy compiled."
+	@ar rc libmy.a $(OBJ)
+	@echo ">>> Executable \"${NAME}\" created."
+	@gcc -g3 -o ${NAME} $(BONUS) -lncurses -L. libmy.a

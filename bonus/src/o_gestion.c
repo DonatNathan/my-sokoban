@@ -34,9 +34,9 @@ void replace_o(positions *pos_map)
         reset_line_chara(pos_map);
         get_line_chara(pos_map, pos_map->pos_o[cmpt]);
         if (pos_map->map[my_getnbr(pos_map->line)][my_getnbr(pos_map->chara)] \
-            == ' ') {
-            pos_map->map[my_getnbr(pos_map->line)][my_getnbr(pos_map->chara)] \
-                = 'O';
+        == ' ') {
+        pos_map->map[my_getnbr(pos_map->line)][my_getnbr(pos_map->chara)] \
+        = 'O';
         }
     }
 }
@@ -55,18 +55,4 @@ void o_gestion(positions *pos_map)
         pos_map->pos_end[0] = -1;
         pos_map->pos_caisse[0] = -1;
     }
-}
-
-void stock_o(positions *pos_map)
-{
-    int cmpt_o = 0;
-    int nb_o = 0;
-
-    for (int cmpt = 0; pos_map->map[cmpt]; cmpt += 1)
-        nb_o = get_o_little(pos_map, cmpt, nb_o);
-    pos_map->pos_o = malloc(sizeof(char *) * nb_o);
-    for (int line = 0; pos_map->map[line]; line += 1) {
-        cmpt_o = get_o(pos_map, cmpt_o, line);
-    }
-    pos_map->pos_o[cmpt_o] = NULL;
 }
