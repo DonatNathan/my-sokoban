@@ -5,19 +5,7 @@
 ** put number
 */
 
-void my_putchar(char c);
-
-int puissance(int y)
-{
-    int compteur = 0;
-    int resultat = 1;
-
-    while (compteur <= y) {
-        resultat = resultat * 10;
-        compteur = compteur + 1;
-    }
-    return resultat;
-}
+#include "my.h"
 
 void my_put_nbr(int nb)
 {
@@ -31,10 +19,8 @@ void my_put_nbr(int nb)
     }
     if (nb == 0)
         my_putchar(48);
-    while (digits != 0) {
+    for (; digits != 0; count += 1)
         digits = digits / 10;
-        count = count + 1;
-    }
     while (count >= 0) {
         count = count - 1;
         result = nb / puissance(count);

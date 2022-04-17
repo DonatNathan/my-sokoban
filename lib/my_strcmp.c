@@ -5,7 +5,7 @@
 ** It's a function that compare two string
 */
 
-int my_strlen(char const *str);
+#include "my.h"
 
 int my_strcmp(char const *s1, char const *s2)
 {

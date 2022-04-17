@@ -9,7 +9,8 @@ int my_atoi(char *str)
 {
     int number = 0;
 
-    for (int cmpt = 0; str[cmpt] != '\0'; cmpt += 1) {
+    for (int cmpt = 0; str[cmpt] != '\0' &&
+    str[cmpt] >= 0 + '0' && str[cmpt] <= 9 + '0'; cmpt += 1) {
         number *= 10;
         number += (str[cmpt] - 48);
     }

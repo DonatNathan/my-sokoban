@@ -5,23 +5,8 @@
 ** It's the main file of my program my_printf
 */
 
-#include <stdio.h>
-#include "../../includes/my.h"
+#include "my.h"
 #include <stdarg.h>
-
-void octale_str(char *s)
-{
-    int cmpt;
-    int character;
-
-    for (cmpt = 0; s[cmpt] != '\0'; cmpt += 1) {
-        if (s[cmpt] < 32 || s[cmpt] >= 127) {
-            character = s[cmpt];
-            deci_to_oct(character);
-        } else
-            my_putchar(s[cmpt]);
-    }
-}
 
 void if_percentage(va_list list, char *s, int cmpt_char)
 {
@@ -31,8 +16,6 @@ void if_percentage(va_list list, char *s, int cmpt_char)
         my_put_nbr(va_arg(list, int));
     if (s[cmpt_char] == 'c')
         my_putchar((char)va_arg(list, int));
-    if (s[cmpt_char] == 'b')
-        binary(va_arg(list, unsigned int));
     if (s[cmpt_char] != 's' && s[cmpt_char] != 'i' && s[cmpt_char] != 'd' \
         && s[cmpt_char] != 'c' && s[cmpt_char] != 'S' && s[cmpt_char] != \
         'b' && s[cmpt_char] != 'n' && s[cmpt_char] != 'o' && s[cmpt_char] \

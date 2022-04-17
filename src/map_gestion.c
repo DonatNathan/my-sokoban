@@ -59,13 +59,14 @@ int check_map(char *map)
         write(2, "invalid number of char\n", 23);
         return (84);
     }
+    return (0);
 }
 
 char *get_map(char **argv, struct stat *my_file)
 {
     int file_desc = open(argv[1], O_RDONLY);
     char buffer[my_file->st_size];
-    char *map = malloc(sizeof(char) * my_file->st_size + 1);
+    char *map = malloc(sizeof(char) * my_file->st_size + 2);
     int cmpt;
 
     if (read(file_desc, buffer, my_file->st_size) == -1 || file_desc == -1) {
@@ -74,7 +75,8 @@ char *get_map(char **argv, struct stat *my_file)
     }
     for (cmpt = 0; cmpt != my_file->st_size; cmpt += 1)
         map[cmpt] = buffer[cmpt];
-    map[cmpt] = '\0';
+    map[cmpt] = '\n';
+    map[cmpt + 1] = '\0';
     if (check_map(map) == 84)
         return ("84");
     return (map);

@@ -33,10 +33,10 @@ void replace_o(positions *pos_map)
     for (int cmpt = 0; pos_map->pos_o[cmpt]; cmpt += 1) {
         reset_line_chara(pos_map);
         get_line_chara(pos_map, pos_map->pos_o[cmpt]);
-        if (pos_map->map[my_getnbr(pos_map->line)][my_getnbr(pos_map->chara)] \
-            == ' ') {
-            pos_map->map[my_getnbr(pos_map->line)][my_getnbr(pos_map->chara)] \
-                = 'O';
+        if (pos_map->map[my_atoi(pos_map->line)][my_atoi(pos_map->chara)] \
+        == ' ') {
+            pos_map->map[my_atoi(pos_map->line)][my_atoi(pos_map->chara)] \
+            = 'O';
         }
     }
 }
